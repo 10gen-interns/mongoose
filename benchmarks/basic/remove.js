@@ -20,18 +20,17 @@ var data = {
 
 var User = mongoose.model('User', UserSchema);
 
-// now benchmark random reads, 10k documents
-
+// now benchmark delete 10k documents
 var output = {};
-
 mongoose.connect("mongodb://localhost/mongoose_perf", function (err) {
   if (err) throw err;
-  output.mongoose = {};
+
   var num = 10000;
+  var start;
+  output.mongoose = {};
 
   var end = num;
   var ids = [];
-
   for (var i=0; i < num; i++) {
     var nData = {};
     nData.name = data.name + i.toString();
@@ -41,45 +40,43 @@ mongoose.connect("mongodb://localhost/mongoose_perf", function (err) {
     User.create(nData, function (err, res) {
       if (err) throw err;
       ids.push(res.id);
-      --end || cont();
+      --end || del();
     });
   }
 
-  function cont() {
-    var start = new Date();
-    end = ids.length;
+  function del() {
+    var dCnt = ids.length;
+    start = new Date();
     for (var i=0; i < ids.length; i++) {
-      var ind = Math.round(Math.random() * ids.length);
-      User.find({ _id : ids[ind] }, function (err, res) {
+      User.remove({ _id : ids[i] }, function (err) {
         if (err) throw err;
-        --end || done(start);
+        --dCnt || done();
       });
     }
   }
 
-  function done(start) {
+  function done() {
     var time = (new Date() - start);
+
     output.mongoose.time = time;
-    output.mongoose.numberRead = num;
+    output.mongoose.numberDeleted = num;
     output.mongoose.dps = num / (time/1000);
-    User.remove(function (err) {
-      if (err) throw err;
-      driverTest(num);
-    });
+    driverTest(num);
   }
 });
 
 function driverTest(num) {
-  mongo.connect("mongodb://localhost/mongoose_perf?w=1", function (err, db) {
+  mongo.connect("mongodb://localhost/mongoose_perf", function (err, db) {
     if (err) throw err;
     output.driver = {};
+    var start;
 
     var user = db.collection('user');
 
+    var num = 10000;
 
-    var ids = [];
     var end = num;
-
+    var ids = [];
     for (var i=0; i < num; i++) {
       var nData = {};
       nData.name = data.name + i.toString();
@@ -89,35 +86,29 @@ function driverTest(num) {
       user.insert(nData, function (err, res) {
         if (err) throw err;
         ids.push(res[0]._id);
-        --end || cont();
+        --end || del();
       });
     }
 
-    function cont() {
-      var start = new Date();
-      end = ids.length;
+    function del() {
+      start = new Date();
+      var dCnt = ids.length;
       for (var i=0; i < ids.length; i++) {
-        var ind = Math.round(Math.random() * ids.length);
-        user.find({ _id : ids[ind] }, function (err, res) {
+        user.remove({ _id : ids[i] }, function (err) {
           if (err) throw err;
-          res.toArray(function (err, res) {
-            --end || finish(start);
-          });
+          --dCnt || finish();
         });
       }
     }
 
-    function finish(start) {
+    function finish() {
       var time = (new Date() - start);
 
       output.driver.time = time;
-      output.driver.numberRead = num;
+      output.driver.numberDeleted = num;
       output.driver.dps = num / (time/1000);
-      user.remove({}, function (err) {
-        if (err) throw err;
-        mongoose.disconnect();
-        db.close();
-      });
+      mongoose.disconnect();
+      db.close();
       console.log(output);
     }
   });

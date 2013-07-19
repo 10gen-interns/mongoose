@@ -21,15 +21,15 @@ var data = {
 var User = mongoose.model('User', UserSchema);
 
 // now benchmark insert 10k documents
-
+var output = {};
 mongoose.connect("mongodb://localhost/mongoose_perf", function (err) {
   if (err) throw err;
 
   var start = new Date();
   var num = 10000;
+  output.mongoose = {};
 
   var end = num;
-  console.log("Mongoose Test Starting now");
 
   for (var i=0; i < num; i++) {
     var nData = {};
@@ -46,7 +46,9 @@ mongoose.connect("mongodb://localhost/mongoose_perf", function (err) {
   function done() {
     var time = (new Date() - start);
 
-    console.log("Mongoose test took %d ms for %d inserts (%d dps)", time, num, num / (time/1000));
+    output.mongoose.time = time;
+    output.mongoose.numberInserted = num;
+    output.mongoose.dps = num / (time/1000);
     User.remove(function (err) {
       if (err) throw err;
       driverTest(num);
@@ -57,7 +59,7 @@ mongoose.connect("mongodb://localhost/mongoose_perf", function (err) {
 function driverTest(num) {
   mongo.connect("mongodb://localhost/mongoose_perf", function (err, db) {
     if (err) throw err;
-
+    output.driver = {};
     var start = new Date();
 
     var user = db.collection('user');
@@ -65,7 +67,6 @@ function driverTest(num) {
     var num = 10000;
 
     var end = num;
-    console.log("Driver Test Starting now");
 
     for (var i=0; i < num; i++) {
       var nData = {};
@@ -82,12 +83,15 @@ function driverTest(num) {
     function finish() {
       var time = (new Date() - start);
 
-      console.log("Driver test took %d ms for %d inserts (%d dps)", time, num, num / (time/1000));
+      output.driver.time = time;
+      output.driver.numberInserted = num;
+      output.driver.dps = num / (time/1000);
       user.remove({}, function (err) {
         if (err) throw err;
         mongoose.disconnect();
         db.close();
       });
+      console.log(output);
     }
   });
 }

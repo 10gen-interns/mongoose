@@ -109,7 +109,7 @@ function driverTest(num) {
       output.driver.dps = num / (time/1000);
       mongoose.disconnect();
       db.close();
-      console.log(output);
+      console.log(JSON.stringify(output));
     }
   });
 }

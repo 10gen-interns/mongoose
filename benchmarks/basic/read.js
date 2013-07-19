@@ -118,7 +118,7 @@ function driverTest(num) {
         mongoose.disconnect();
         db.close();
       });
-      console.log(output);
+      console.log(JSON.stringify(output));
     }
   });
 }

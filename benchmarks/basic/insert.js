@@ -21,6 +21,7 @@ var data = {
 var User = mongoose.model('User', UserSchema);
 
 // now benchmark insert 10k documents
+
 var output = {};
 mongoose.connect("mongodb://localhost/mongoose_perf", function (err) {
   if (err) throw err;

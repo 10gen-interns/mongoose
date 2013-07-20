@@ -1,0 +1,24 @@
+{ "charts" : [
+    { "title" : "test line", "type" : "line" }
+  ],
+  "data" : [
+    [
+      { "x" : "commit1",
+        "line1" : 1,
+        "line2" : 2,
+        "line3" : 3 },
+      { "x" : "commit2",
+        "line1" : 2,
+        "line2" : 3,
+        "line3" : 4 },
+      { "x" : "commit3",
+        "line1" : 3,
+        "line2" : 4,
+        "line3" : 5 },
+      { "x" : "commit4",
+        "line1" : 4,
+        "line2" : 5,
+        "line3" : 6 }
+    ]
+  ]
+}

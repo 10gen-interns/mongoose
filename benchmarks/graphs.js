@@ -324,7 +324,10 @@ function buildLineGraph(selector, chartDesc, chartData) {
       .attr('class', k)
       .attr('cx', function(d, i) { return x(i); })
       .attr('cy', function(d) { return y(d); })
-      .attr('r', 3);
+      .attr('r', 3)
+      .style('fill', function (d, i) {
+        return color(k);
+      });
 
 
   }
@@ -337,17 +340,20 @@ function buildLineGraph(selector, chartDesc, chartData) {
     .data(lineNames).enter().append("g")
     .attr("class", "legend")
     .attr("transform", function (d, i) {
-      return "translate(" + (i*70) + ", 10)";
+      return "translate(20, " + (i*20) + ")";
     });
 
   legend.append("circle")
+    .attr("x", 18)
     .attr("r", 5)
-    .style("fill", color);
+    .style("fill", function (d) {
+      return color(d);
+    });
 
   legend.append("text")
-    .attr("x", 50)
+    .attr("x", 15)
     .attr("dy", ".35em")
-    .style("text-anchor", "end")
+    .style("text-anchor", "start")
     .text(function(d) { return d; });
 
 

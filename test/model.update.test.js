@@ -812,5 +812,25 @@ describe('model: update:', function(){
     })
   })
 
+  it('overwrite works', function(done){
+    var db = start()
+    var schema = Schema({ mixed: {} });
+    var M = db.model('updatesmixed-' + random(), schema);
+
+    M.create({ mixed: 'something' }, function (err, created) {
+      assert.ifError(err);
+
+      M.update({ _id: created._id }, { mixed: {} }, { overwrite : true }, function (err) {
+        assert.ifError(err);
+        M.findById(created._id, function (err, doc) {
+          assert.ifError(err);
+          assert.equal(created.id, doc.id)
+          assert.equal(typeof doc.mixed, 'object');
+          assert.equal(Object.keys(doc.mixed).length, 0);
+          done()
+        })
+      })
+    })
+  })
 
 });

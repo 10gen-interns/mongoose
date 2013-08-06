@@ -838,14 +838,14 @@ describe('model: update:', function(){
 
     var M = db.model('updateover'+random(), sch);
 
-    M.create({ title : 'this', subdoc : { name : 'that', num : 1 } }, function (err, doc) {
+    M.create({ subdoc : { name : 'that', num : 1 } }, function (err, doc) {
       assert.ifError(err);
 
-      M.update({ _id : doc.id }, { title: '', subdoc : {} }, { overwrite : true }, function (err) {
+      M.update({ _id : doc.id }, { title : 'something!' }, { overwrite : true }, function (err) {
         assert.ifError(err);
         M.findById(doc.id, function (err, doc) {
           assert.ifError(err);
-          assert.equal(doc.title, '');
+          assert.equal(doc.title, 'something!');
           assert.equal(doc.subdoc.name, undefined);
           assert.equal(doc.subdoc.num, undefined);
           done();

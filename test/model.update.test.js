@@ -814,7 +814,7 @@ describe('model: update:', function(){
 
   it('overwrite works', function(done){
     var db = start()
-    var schema = Schema({ mixed: {} });
+    var schema = new Schema({ mixed: {} });
     var M = db.model('updatesmixed-' + random(), schema);
 
     M.create({ mixed: 'something' }, function (err, created) {
@@ -831,6 +831,27 @@ describe('model: update:', function(){
         })
       })
     })
+  })
+  it('overwrites all properties', function(done){
+    var db = start();
+    var sch = new Schema({ title : String, subdoc : { name : String, num : Number }});
+
+    var M = db.model('updateover'+random(), sch);
+
+    M.create({ title : 'this', subdoc : { name : 'that', num : 1 } }, function (err, doc) {
+      assert.ifError(err);
+
+      M.update({ _id : doc.id }, { title: '', subdoc : {} }, { overwrite : true }, function (err) {
+        assert.ifError(err);
+        M.findById(doc.id, function (err, doc) {
+          assert.ifError(err);
+          assert.equal(doc.title, '');
+          assert.equal(doc.subdoc.name, undefined);
+          assert.equal(doc.subdoc.num, undefined);
+          done();
+        });
+      });
+    });
   })
 
 });

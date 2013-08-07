@@ -12,6 +12,7 @@ $("document").ready(function () {
       var chartData = data[i];
       var container = "div.hero-unit";
 
+      $("<a></a>").attr("name", i.toString()).appendTo(container);
       $("<div></div>").addClass("gContainer").attr("id", "div"+i).appendTo(container);
       var selector = "#div%id%".replace("%id%",i.toString());
       switch(chartDesc.type) {

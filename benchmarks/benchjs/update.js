@@ -250,7 +250,7 @@ mongoose.connect('mongodb://localhost/mongoose-bench', function (err) {
           deferred.resolve();
         });
       }
-    }).add('Update - Mongoose - $pop and push', {
+    }).add('Update - Mongoose - pop and push', {
       defer : true,
       fn : function (deferred) {
         testBp.comments.push(commentData);
@@ -310,7 +310,7 @@ mongoose.connect('mongodb://localhost/mongoose-bench', function (err) {
           out.ops = item.hz;
           outObj[item.name.replace(/\s/g, "")] = out;
         });
-        console.log(outObj);
+        console.log(JSON.stringify(outObj));
       }
     });
     function next() {

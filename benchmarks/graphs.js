@@ -140,10 +140,6 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
   var y = d3.scale.linear().range([height, 0]);
 
   var color = d3.scale.category20();
-    /*
-     *.range(["#98abc5", "#8a89a6", "#7b6888",
-     *  "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-     */
 
   var xAxis = d3.svg.axis().scale(x0).orient("bottom");
   var yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(d3.format(".2s"));
@@ -240,6 +236,15 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
     .attr("dy", ".35em")
     .style("text-anchor", "end")
     .text(function(d) { return d; });
+
+  // add the axis label
+  graph.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text(chartDesc.units);
 
 }
 
@@ -357,5 +362,13 @@ function buildLineGraph(selector, chartDesc, chartData) {
     .style("text-anchor", "start")
     .text(function(d) { return d; });
 
+  // add the axis label
+  graph.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text(chartDesc.units);
 
 }

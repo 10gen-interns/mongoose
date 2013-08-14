@@ -187,6 +187,16 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
     .attr("transform", "translate(0," + height +")")
     .call(xAxis);
 
+  // this is the thing we have to do to add links to commit names
+  graph.selectAll("g.x.axis g text").each(function (d, i) {
+    var g = d3.select(this);
+    var text = g.text().split('|');
+    g.text('');
+    g.append("a")
+      .attr("xlink:href", text[1])
+      .text(text[0]);
+  });
+
   // add the y-axis
   graph.append("g")
     .attr("class", "y axis")
@@ -302,6 +312,16 @@ function buildLineGraph(selector, chartDesc, chartData) {
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
+
+  // this is the thing we have to do to add links to commit names
+  graph.selectAll("g.x.axis g text").each(function (d, i) {
+    var g = d3.select(this);
+    var text = g.text().split('|');
+    g.text('');
+    g.append("a")
+      .attr("xlink:href", text[1])
+      .text(text[0]);
+  });
 
   var yAxis = d3.svg.axis()
     .scale(y)

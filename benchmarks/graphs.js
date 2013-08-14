@@ -190,6 +190,7 @@ function buildMultiBarGraph(selector, chartDesc, chartData) {
   // this is the thing we have to do to add links to commit names
   graph.selectAll("g.x.axis g text").each(function (d, i) {
     var g = d3.select(this);
+    g.attr("fill", "blue");
     var text = g.text().split('|');
     g.text('');
     g.append("a")
@@ -316,6 +317,7 @@ function buildLineGraph(selector, chartDesc, chartData) {
   // this is the thing we have to do to add links to commit names
   graph.selectAll("g.x.axis g text").each(function (d, i) {
     var g = d3.select(this);
+    g.attr("fill", "blue");
     var text = g.text().split('|');
     g.text('');
     g.append("a")
